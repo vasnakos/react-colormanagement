@@ -7,7 +7,9 @@ export default class App extends Component {
     super(props);
     this.state = {
       term: '',
-      items: []
+      items: [],
+      editMode: false,
+      itemToEdit: null
     };
   }
 
@@ -23,14 +25,50 @@ export default class App extends Component {
     });
   }
 
+  deleteItem = (i) => {
+    let items = this.state.items.slice();
+    items.splice(i, 1);
+    this.setState({
+        items
+    });
+  }
+
+  editItem = (i) => {
+    this.setState({
+      editMode: true,
+      itemToEdit : i
+    })
+    let item = this.state.items[i];
+    this.setState({ term: item });
+  }
+
+  updateItem = (event) => {
+    event.preventDefault();
+    let items = [...this.state.items];
+    let i = this.state.itemToEdit;
+    items[i] = this.state.term;
+    this.setState({
+      editMode:false,
+      itemToEdit: null,
+      term: '',
+      items: [...items]
+    });
+  }
+
   render() {
     return (
       <div>
         <form className="App" onSubmit={this.onSubmit}>
-          <input value={this.state.term} onChange={this.onChange} />
-          <button>Submit</button>
+          <input value={this.state.term} onChange={this.onChange}  />
+          {
+            !this.state.editMode ?
+              <button>Add</button>
+            :
+              <button onClick={this.updateItem}>Edit</button>
+          }
+          
         </form>
-        <List items={this.state.items} />
+        <List items={this.state.items} deleteItem={this.deleteItem} editItem={this.editItem} />
       </div>
     );
   }
