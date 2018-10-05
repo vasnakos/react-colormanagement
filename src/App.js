@@ -27,7 +27,6 @@ export default class App extends Component {
   */
   generateUniqueId () {
     let tmpuuidv4 = uuidv4();
-    console.log(tmpuuidv4);
     return tmpuuidv4;
   }
 
@@ -36,7 +35,9 @@ export default class App extends Component {
     this.setState({ term: event.target.value });
   } 
 
-
+  /* Use this function to validate the input
+   * @returns {String} 'error', 'success', or null
+  */
   getValidationState() {
     if(this.state.term.length === 0) {
       return null;
@@ -49,13 +50,14 @@ export default class App extends Component {
     }
   }
 
+  // Submit handler for the form. Firstly it checks for posible validation issues and then saves the new state.
   onSubmit = (event) => {
     event.preventDefault();
     let validationState = this.getValidationState(); 
-    if (validationState === null || validationState === 'error') return false;
+    if (validationState === null || validationState === 'error') return false;   //Do not proceed if there is any validation issue
     let newItem = {
       term: this.state.term,
-      id: this.generateUniqueId()
+      id: this.generateUniqueId()   //Create a unique id for each item
     };
     this.setState({
       term: '',
@@ -63,6 +65,7 @@ export default class App extends Component {
     });
   }
 
+  // Function to handle the delete action. It searches of the item to me deleted based on the unique id, delete it and save the new state
   deleteItem = (i) => {
     let items = [...this.state.items];
     let newItems = items.filter((item) => {
@@ -74,6 +77,8 @@ export default class App extends Component {
     });
   }
 
+  // Function to be run when the user clicks the edit button on the list items.
+  // It finds the item to be edited, and displays it's copy on the input field.
   editItem = (i) => {
     this.setState({
       editMode: true,
@@ -87,6 +92,8 @@ export default class App extends Component {
     this.setState({ term: item[0].term });
   }
 
+
+  //Function to handle the update action on an item. It saves the new value of the input field to the appropriate list item of the colors list.
   updateItem = (event) => {
     event.preventDefault();
     let items = [...this.state.items];
@@ -131,7 +138,6 @@ export default class App extends Component {
                       onChange={this.onChange}
                     />
                   </FormGroup>
-
                   {
                     !this.state.editMode ?
                       <Button bsStyle="primary" type="submit" className={(this.state.term.length === 0 || this.getValidationState() === 'error') ? 'disabled': '' }>Add</Button>
