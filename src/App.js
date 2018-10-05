@@ -67,13 +67,18 @@ export default class App extends Component {
 
   // Function to handle the delete action. It searches of the item to me deleted based on the unique id, delete it and save the new state
   deleteItem = (i) => {
+    let editMode = this.state.editMode;
     let items = [...this.state.items];
     let newItems = items.filter((item) => {
       return item.id !== i
     });
 
+    if (newItems.length === 0) {
+      editMode = false;
+    }
     this.setState({
-        items: newItems
+        items: newItems,
+        editMode
     });
   }
 
