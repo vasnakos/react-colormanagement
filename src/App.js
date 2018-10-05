@@ -82,6 +82,7 @@ export default class App extends Component {
         <div className="App-header">
           <h1>Color Management App</h1>
         </div>
+        <div className="color-gradient-bar"></div>
         <Grid>
           <Row>
             <Col md={4} mdOffset={4}>
