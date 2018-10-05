@@ -96,10 +96,14 @@ export default class App extends Component {
   //Function to handle the update action on an item. It saves the new value of the input field to the appropriate list item of the colors list.
   updateItem = (event) => {
     event.preventDefault();
+    
+    let validationState = this.getValidationState(); 
+    if (validationState === null || validationState === 'error') return false;   //Do not proceed if there is any validation issue
+
     let items = [...this.state.items];
     let i = this.state.itemToEdit;
 
-    items.map((item) => {
+    items.forEach((item) => {
       if (item.id === i) {
         item.term = this.state.term
       }
@@ -144,7 +148,6 @@ export default class App extends Component {
                     :
                       <Button bsStyle="primary" onClick={this.updateItem} className={(this.state.term.length === 0 || this.getValidationState() === 'error') ? 'disabled': '' }>Edit</Button>
                   }
-              
                 </form>
               </Well>
             </Col>

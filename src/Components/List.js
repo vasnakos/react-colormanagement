@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, ButtonGroup, Glyphicon, ListGroup, ListGroupItem } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 class List extends Component {
     render (){
@@ -22,5 +23,11 @@ class List extends Component {
       );
     }
 }
+
+List.propTypes = {
+  items: PropTypes.array,
+  editItem: PropTypes.func,
+  deleteItem: PropTypes.func
+};
 
 export default List;
