@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import { ListGroup, ListGroupItem } from 'react-bootstrap';
 class List extends Component {
 
     handleDelete (index) {
@@ -8,11 +8,11 @@ class List extends Component {
 
     render (){
         return (
-        <ul>
+        <ListGroup>
           {
-            this.props.items.map((item, index) => <li key={index}><a href="#" onClick={() => this.props.editItem(index) }>Edit</a> <a href="#" onClick={() => this.props.deleteItem(index) }>Delete</a> {item}</li>)
+            this.props.items.map((item, index) => <ListGroupItem key={index}><a href="#" onClick={() => this.props.editItem(index)}>Edit</a> <a href="#" onClick={() => this.props.deleteItem(index) }>Delete</a> {item}</ListGroupItem>)
           }
-        </ul>
+        </ListGroup>
       );
     }
 }
