@@ -5,6 +5,9 @@ import './css/bootstrap.min.css';
 import './css/bootstrap-theme.min.css';
 import { Grid, Row, Col, Button, FormControl, FormGroup, ControlLabel, Well } from 'react-bootstrap';
 
+// We use the uuid in order to produce unique keys for the list items.
+// we could just use the index of the iteration, but as we want to delete list items too, using the index, would lead to recalculate the index for the rest of the items.
+const uuidv4 = require('uuid/v4'); 
 
 const isOk  = /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i;
 
@@ -18,7 +21,17 @@ export default class App extends Component {
       itemToEdit: null
     };
   }
+ 
+  /** Function to calculate a new unique id.
+  * @returns {Number} the new unique id
+  */
+  generateUniqueId () {
+    let tmpuuidv4 = uuidv4();
+    console.log(tmpuuidv4);
+    return tmpuuidv4;
+  }
 
+  // Function to handle the change of the input field. When run, it sets the state, changing the 'term' to the new value
   onChange = (event) => {
     this.setState({ term: event.target.value });
   } 
@@ -40,17 +53,24 @@ export default class App extends Component {
     event.preventDefault();
     let validationState = this.getValidationState(); 
     if (validationState === null || validationState === 'error') return false;
+    let newItem = {
+      term: this.state.term,
+      id: this.generateUniqueId()
+    };
     this.setState({
       term: '',
-      items: [...this.state.items, this.state.term]
+      items: [...this.state.items, newItem]
     });
   }
 
   deleteItem = (i) => {
-    let items = this.state.items.slice();
-    items.splice(i, 1);
+    let items = [...this.state.items];
+    let newItems = items.filter((item) => {
+      return item.id !== i
+    });
+
     this.setState({
-        items
+        items: newItems
     });
   }
 
@@ -59,15 +79,25 @@ export default class App extends Component {
       editMode: true,
       itemToEdit : i
     })
-    let item = this.state.items[i];
-    this.setState({ term: item });
+    let items = [...this.state.items];
+    let item = items.filter((item) => {
+      return item.id === i
+    });
+
+    this.setState({ term: item[0].term });
   }
 
   updateItem = (event) => {
     event.preventDefault();
     let items = [...this.state.items];
     let i = this.state.itemToEdit;
-    items[i] = this.state.term;
+
+    items.map((item) => {
+      if (item.id === i) {
+        item.term = this.state.term
+      }
+    });
+
     this.setState({
       editMode:false,
       itemToEdit: null,
@@ -79,13 +109,13 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <div className="App-header">
+        <div className="header">
           <h1>Color Management App</h1>
         </div>
         <div className="color-gradient-bar"></div>
         <Grid>
           <Row>
-            <Col md={4} mdOffset={4}>
+            <Col sm={6} md={4} smOffset={3} mdOffset={4}>
               <Well>
                 <form className="App" onSubmit={this.onSubmit}>
 
@@ -115,7 +145,7 @@ export default class App extends Component {
           </Row>
 
           <Row>
-            <Col>
+            <Col sm={6} md={4} smOffset={3} mdOffset={4}>
               <List items={this.state.items} deleteItem={this.deleteItem} editItem={this.editItem} />    
             </Col>
           </Row>

@@ -1,16 +1,23 @@
 import React, { Component } from 'react';
-import { ListGroup, ListGroupItem } from 'react-bootstrap';
-class List extends Component {
+import { Button, ButtonGroup, Glyphicon, ListGroup, ListGroupItem } from 'react-bootstrap';
 
-    handleDelete (index) {
-        console.log(index)
-    }
+class List extends Component {
 
     render (){
         return (
         <ListGroup>
           {
-            this.props.items.map((item, index) => <ListGroupItem key={index}><a href="#" onClick={() => this.props.editItem(index)}>Edit</a> <a href="#" onClick={() => this.props.deleteItem(index) }>Delete</a> {item}</ListGroupItem>)
+            this.props.items.map((item) => {
+              return (<ListGroupItem key={item.id} className="clearfix">
+                
+                <h4 className="pull-left">{item.term}</h4>
+
+                <ButtonGroup className="pull-right">
+                  <Button onClick={() => this.props.editItem(item.id)}><Glyphicon glyph="edit" />Edit</Button>
+                  <Button onClick={() => this.props.deleteItem(item.id)}><Glyphicon glyph="remove"/>Remove</Button>
+                </ButtonGroup>
+              </ListGroupItem>);
+            })
           }
         </ListGroup>
       );
